@@ -8,6 +8,8 @@ The bot operates as a fully automated Telegram service that processes travel req
 
 ## Architecture Components
 
+![architecture](images/Telegram%20Travel%20Bot.png)
+
 ### Core Workflow Agents
 
 **1. Planning and Logistics Agent**
