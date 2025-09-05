@@ -105,15 +105,15 @@ The bot operates as a fully automated Telegram service that processes travel req
 - Generate credentials and note project ID
 
 **3. Search Service Setup**
-```bash
+
 # Serper Dev
-# Register at serper.dev
-# Generate API key from dashboard
+- Register at serper.dev
+- Generate API key from dashboard
 
 # Tavily Setup
-# Sign up at tavily.com
-# Create API key for search integration
-```
+- Sign up at tavily.com
+- Create API key for search integration
+
 
 ### Phase 3: Workflow Import and Configuration
 
@@ -130,14 +130,6 @@ Navigate to Settings > Credentials in n8n and add:
 - **Gemini Flash 2.5 Node**: Configure with "gemini-flash-2.5" model
 - Set appropriate temperature and token limits
 
-**3. Memory System Setup**
-```json
-{
-  "memoryType": "Postgres Chat Memory",
-  "sessionKey": "{{ $('Telegram Trigger').item.json.message.chat.id}}{{ $('Telegram Trigger').item.json.message.message_id }}",
-  "Table Name": "your table name",
-}
-```
 
 
 ## Workflow Process
