@@ -1,6 +1,6 @@
 # Telegram Travel Bot Architecture
 
-This is a comprehensive multi-agent travel planning system built on n8n that integrates seamlessly with Telegram to provide intelligent, real-time travel assistance. The bot leverages a sophisticated chain-of-thought architecture to deliver personalized travel recommendations with live data integration.
+This is a comprehensive telegram multi-agent travel planning bot built on n8n that integrates seamlessly with Telegram to provide intelligent, real-time travel assistance. The bot leverages a sophisticated chain-of-thought architecture to deliver personalized travel recommendations with live data integration.
 
 ## System Overview
 
@@ -29,6 +29,11 @@ The bot operates as a fully automated Telegram service that processes travel req
 - Polishes data into a single message with complete budget summary
 - Accesses Chat Model and Memory for final review
 - Ensures comprehensive and user-friendly output
+
+### Output
+
+![output1](images/telegram_travel_chat1.png)
+![output2](images/telegram_travel_chat2.png)
 
 ### Supporting Infrastructure
 
@@ -67,9 +72,7 @@ The bot operates as a fully automated Telegram service that processes travel req
 ### Technical Prerequisites
 
 **n8n Platform**
-- n8n instance (self-hosted version 0.234.0+ or n8n Cloud)
-- Minimum 2GB RAM for smooth operation
-- Stable internet connection for API calls
+- n8n cloud
 
 **API Keys and Credentials**
 - **OpenAI API Key**: For GPT-4.1 Mini access
@@ -78,39 +81,12 @@ The bot operates as a fully automated Telegram service that processes travel req
 - **Serper API Key**: For Google search integration
 - **Tavily API Key**: For alternative search capabilities
 
-**External Services**
-- Active Telegram account for bot management
-- Access to weather APIs (OpenWeatherMap or similar)
-- Hotel/restaurant APIs (optional for enhanced data)
-
-### System Requirements
-
-**Server Specifications (Self-hosted)**
-- CPU: 2+ cores recommended
-- RAM: 4GB minimum, 8GB recommended
-- Storage: 10GB+ available space
-- Network: Broadband internet connection
-
-**Dependencies**
-- Node.js 18.x or higher
-- Docker (if using containerized deployment)
-- SSL certificate (for webhook endpoints)
 
 ## Implementation Guide
 
 ### Phase 1: Environment Setup
 
-**1. n8n Installation**
-```bash
-# For Docker deployment
-docker run -it --rm \
-  --name n8n \
-  -p 5678:5678 \
-  -v ~/.n8n:/home/node/.n8n \
-  n8nio/n8n
-```
-
-**2. Telegram Bot Creation**
+**1. Telegram Bot Creation**
 - Message @BotFather on Telegram
 - Use `/newbot` command and follow prompts
 - Save the bot token securely
@@ -157,104 +133,12 @@ Navigate to Settings > Credentials in n8n and add:
 **3. Memory System Setup**
 ```json
 {
-  "memoryType": "bufferWindowMemory",
-  "sessionKey": "{{ $json.chatId }}",
-  "memoryKey": "chat_history",
-  "returnMessages": true,
-  "maxTokenLimit": 2000
+  "memoryType": "Postgres Chat Memory",
+  "sessionKey": "{{ $('Telegram Trigger').item.json.message.chat.id}}{{ $('Telegram Trigger').item.json.message.message_id }}",
+  "Table Name": "your table name",
 }
 ```
 
-### Phase 4: Agent Configuration
-
-**1. Planning Agent Setup**
-```text
-// System Prompt
-You are an expert travel planner. 
-Your job is to parse a clients travel request and create a detailed, day-by-day plan. You must identify the destination, dates, number of travelers, kilometers travelled each day and interests. 
-Always use Tavily tool to search for the latest and accurate information.
-Then, you will create a high-level itinerary with a theme and key activities for each day. 
-Do not provide any hotel or restaurant recommendations, prices, or external details. Focus solely on the itinerary structure and logistics. Format your output as a single JSON object. 
-Do not add any conversational text before or after the JSON.
-```
-
-**2. Live Search Agent Configuration**
-```text
-// Search Parameters
-{
-  "hotelSearch": true,
-  "restaurantSearch": true,
-  "weatherData": true,
-  "transportOptions": true,
-  "attractionInfo": true
-}
-```
-
-**3. Reviewer Agent Setup**
-```javascript
-// Final Review Prompt
-Synthesize all travel information into a comprehensive, user-friendly response.
-Include complete budget breakdown, timeline, and practical recommendations.
-Format for easy Telegram reading with clear sections and bullet points.
-```
-
-### Phase 5: Integration Testing
-
-**1. Telegram Webhook Setup**
-- Configure webhook URL in Telegram settings
-- Test message reception and processing
-- Verify SSL certificate functionality
-
-**2. API Integration Testing**
-```bash
-# Test each API endpoint
-curl -X POST "https://api.openai.com/v1/chat/completions" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json"
-```
-
-**3. End-to-End Workflow Testing**
-- Send test travel requests via Telegram
-- Monitor execution logs in n8n
-- Verify response quality and timing
-
-### Phase 6: Production Deployment
-
-**1. Security Hardening**
-- Enable HTTPS for all endpoints
-- Implement rate limiting
-- Set up monitoring and alerting
-- Configure backup procedures
-
-**2. Performance Optimization**
-```json
-{
-  "executionTimeout": 300,
-  "maxRunningExecutions": 10,
-  "saveDataOnError": "all",
-  "saveDataOnSuccess": "all"
-}
-```
-
-**3. Monitoring Setup**
-- Configure execution logging
-- Set up error notifications
-- Implement usage tracking
-- Monitor API quota usage
-
-### Phase 7: Maintenance and Updates
-
-**1. Regular Monitoring**
-- Check API key expiration dates
-- Monitor usage metrics and costs
-- Review bot performance analytics
-- Update model configurations as needed
-
-**2. Feature Enhancements**
-- Add new travel data sources
-- Implement user preference learning
-- Expand supported languages
-- Add booking integration capabilities
 
 ## Workflow Process
 
@@ -283,7 +167,7 @@ curl -X POST "https://api.openai.com/v1/chat/completions" \
 ## Troubleshooting Common Issues
 
 **Bot Not Responding**
-- Verify webhook configuration
+- Verify trigger configuration
 - Check API credentials validity
 - Review n8n execution logs
 
@@ -331,25 +215,8 @@ curl -X POST "https://api.openai.com/v1/chat/completions" \
 - Monitor bandwidth usage
 - Optimize database queries
 
-## Future Enhancements
-
-**Planned Features**
-- Multi-language support
-- Voice message integration
-- Photo recognition for travel planning
-- Calendar integration
-- Booking system integration
-
-**Advanced Capabilities**
-- Machine learning personalization
-- Predictive travel recommendations
-- Real-time flight tracking
-- Weather-based itinerary adjustments
-- Social travel planning
-
 ---
 
-This architecture represents a sophisticated approach to automated travel assistance, combining the convenience of Telegram messaging with the power of multi-agent AI systems and real-time data integration.
 
 ## License
 
