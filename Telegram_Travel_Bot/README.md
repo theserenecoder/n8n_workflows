@@ -106,11 +106,11 @@ The bot operates as a fully automated Telegram service that processes travel req
 
 **3. Search Service Setup**
 
-# Serper Dev
+**1 Serper Dev**
 - Register at serper.dev
 - Generate API key from dashboard
 
-# Tavily Setup
+**2 Tavily Setup**
 - Sign up at tavily.com
 - Create API key for search integration
 
